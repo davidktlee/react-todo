@@ -1,33 +1,32 @@
 import axios from 'axios'
-import { useContext, useEffect, useState } from 'react'
-import { ApiContext } from './../App'
+import {  useEffect, useState } from 'react'
+import ModifyItem from './ModifyItem'
+import { DeleteTodo } from './api/api'
 
-const TodoItem = () => {
-  const props = useContext(ApiContext)
-  const { apiFunc, setList, datas } = props
-  const deleteItem = async (id) => {
-    const { data } = await apiFunc({
-      url: `https://asia-northeast3-heropy-api.cloudfunctions.net/api/todos/${id}`,
-      method: 'DELETE',
-    })
-    setList((prev) => [...prev, data])
+const TodoItem = ({id, title, order}) => {
+  const [modifyMode, setModifyMode] = useState(false)
+  const changeModifyMode = () => { 
+    setModifyMode(prev => !prev)
   }
-
   return (
     <>
-      <ul className="m-10 py-2">
-        {datas.map((data) => (
-          <li className="m-5 p-5 bg-gray-100" key={data.id}>
-            <span className="mx-10 font-bold">{data.title}</span>
-            <button
-              className="px-3 py-1 bg-white border-none text-black cursor-pointer rounded hover:text-white hover:bg-black"
-              onClick={() => deleteItem(data.id)}
-            >
-              끝
-            </button>
-          </li>
-        ))}
-      </ul>
+      <li className=" my-5 p-5 bg-gray-100" key={id}>
+        <span className="px-10 grow font-bold">{title}</span>
+        <button
+          className=" mx-2 px-3 py-1 bg-white border-none text-black cursor-pointer rounded hover:text-white hover:bg-black"
+          onClick={() => DeleteTodo(id)}
+        >
+          끝
+        </button>
+        <button
+          className="px-3 py-1 bg-white border-none text-black cursor-pointer rounded hover:text-white hover:bg-black"
+        onClick={changeModifyMode}>
+          수정
+        </button>
+        
+        {modifyMode &&  <ModifyItem title={title} id={id} order={order} changeModifyMode={changeModifyMode}/>}
+      </li>
+
     </>
   )
 }

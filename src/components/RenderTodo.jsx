@@ -1,20 +1,28 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import TodoItem from './TodoItem'
-import { ApiContext } from './../App'
+import { FetchTodo } from './api/api'
 
 const RenderTodo = () => {
-  const props = useContext(ApiContext)
-  const { list, isLoading, apiFunc, setDatas } = props
-
-  async function fetchTodo() {
-    const res = await apiFunc({
-      method: 'GET',
-    })
-    setDatas(res.data)
+  const [lists, setLists] = useState()
+  const fetchTodoList = async () => {
+     const res = await FetchTodo()
+     setLists(res.data)
   }
   useEffect(() => {
-    fetchTodo()
-  }, [list])
-  return <>{!isLoading && <TodoItem />}</>
+    fetchTodoList()
+  }, [])
+
+
+  return (
+  <>
+    <ul className="m-5 py-2">
+      {lists && lists.map(list => (
+
+        <TodoItem key={`${list.id}-${list.title}`} id={list.id} title={list.title} order={list.order}/>
+      ))}
+    </ul>
+  </>
+
+  )
 }
 export default RenderTodo

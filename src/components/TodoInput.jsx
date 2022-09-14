@@ -1,30 +1,32 @@
-import { useContext, useRef } from 'react'
+import { useRef, useState } from 'react'
 // import Buttons from './Buttons'
-import { ApiContext } from './../App'
+
+import { CreateTodo, FetchTodo } from './api/api'
 
 const TodoInput = () => {
-  const props = useContext(ApiContext)
-  const { setInputData, inputData, setList, apiFunc } = props
-
+  // const props = useContext(ApiContext)
+  // const { setInputData, inputData, setList, apiFunc } = props
+  const [inputData, setInputData] = useState('')
+  const [list, setList] = useState([])
   const order = useRef(0)
 
   const onChangeInput = (e) => {
     setInputData(e.target.value)
   }
   // CREATE
-  const createTodo = async (input) => {
-    const { data } = await apiFunc({
-      method: 'POST',
-      data: {
-        title: input,
-        order,
-      },
-    })
-    setList((prev) => [input, ...prev])
-  }
+  // const createTodo = async (input) => {
+  //   const { data } = await CreateTodo({
+  //     method: 'POST',
+  //     data: {
+  //       title: input,
+  //       order,
+  //     },
+  //   })
+  //   setList((prev) => [input, ...prev])
+  // }
   // SUBMIT
   const submitTodo = (inputData) => {
-    createTodo(inputData)
+    CreateTodo(inputData)
     setList((prev) => [...prev, inputData])
     setInputData('')
     order.current += 1
